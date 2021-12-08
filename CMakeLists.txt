@@ -24,6 +24,7 @@ set(
 	EXTERNAL_INCLUDE_DIRS
 	"deps/glad/include"
 	"deps/glfw/include"
+	"deps/glm"	
 )
 
 set(

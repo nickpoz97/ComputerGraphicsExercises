@@ -1,7 +1,6 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
 #include <glm/glm.hpp>
@@ -10,6 +9,7 @@
 
 #include <shader.h>
 #include <camera.h>
+#include "paths.hpp"
 
 #include <iostream>
 
@@ -80,8 +80,13 @@ int main()
 
     // build and compile our shader zprogram
     // ------------------------------------
-    Shader lightingShader("src/colors.vs", "src/colors.fs");
-    Shader lightCubeShader("src/light_cube.vs", "src/light_cube.fs");
+    const std::string color_vs{ shadersDirPath + "/8_directional_light/colors.vs" };
+    const std::string color_fs{ shadersDirPath + "/8_directional_light/colors.fs" };
+    Shader lightingShader(color_vs.c_str(), color_fs.c_str());
+
+    const std::string lc_vs{ shadersDirPath + "/8_directional_light/light_cube.vs" };
+    const std::string lc_fs{ shadersDirPath + "/8_directional_light/light_cube.fs" };
+    Shader lightCubeShader(lc_vs.c_str(), lc_fs.c_str());
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
@@ -152,8 +157,8 @@ int main()
 
     // load textures (we now use a utility function to keep the code more organized)
     // -----------------------------------------------------------------------------
-    unsigned int diffuseMap = loadTexture("assets/container2.png");
-    unsigned int specularMap = loadTexture("assets/container2_specular.png");
+    unsigned int diffuseMap = loadTexture(std::string{ texturesDirPath + "/8_directional_light/container2.png" }.c_str());
+    unsigned int specularMap = loadTexture(std::string{ texturesDirPath + "/8_directional_light/container2_specular.png" }.c_str());
 
     // shader configuration
     // --------------------
