@@ -27,8 +27,8 @@ set(
 	"deps/glm"	
 )
 
-set(
-	EXTERNAL_SRCS deps/glad/src/glad.c
+add_library(
+	glad STATIC deps/glad/src/glad.c
 )
 
 include_directories(${INTERNAL_INCLUDE_DIRS} ${EXTERNAL_INCLUDE_DIRS})
@@ -37,8 +37,8 @@ foreach(DIRPATH IN LISTS EXERCISES_SRC_DIRS)
 	get_filename_component(EXERCISE_EXE ${DIRPATH} NAME)
 	file(GLOB EXERCISE_SRCS "${DIRPATH}/*.cpp")
 	message(${EXERCISE_SRCS})
-	add_executable(${EXERCISE_EXE} ${EXERCISE_SRCS} ${EXTERNAL_SRCS})
-	target_link_libraries(${EXERCISE_EXE} OpenGL::GL glfw)	
+	add_executable(${EXERCISE_EXE} ${EXERCISE_SRCS})
+	target_link_libraries(${EXERCISE_EXE} OpenGL::GL glfw glad)	
 endforeach()
 
 ### set absolute paths for texture and shaders dir ###
