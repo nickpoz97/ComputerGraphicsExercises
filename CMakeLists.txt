@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.17)
 project(ComputerGraphics)
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin )
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 
 file(GLOB EXERCISES_SRC_DIRS "${PROJECT_SOURCE_DIR}/src/*")
 
@@ -36,14 +36,15 @@ add_library(
 )
 
 find_package(assimp REQUIRED)
-message("Assimp lib path : ${ASSIMP_LIBRARIES})
+message("Assimp lib path : ${ASSIMP_LIBRARIES}")
+message("Assimp include dirs : ${ASSIMP_INCLUDE_DIRS}")
 
 include_directories(${INTERNAL_INCLUDE_DIRS} ${EXTERNAL_INCLUDE_DIRS})
 
 foreach(DIRPATH IN LISTS EXERCISES_SRC_DIRS)
 	get_filename_component(EXERCISE_EXE ${DIRPATH} NAME)
 	file(GLOB EXERCISE_SRCS "${DIRPATH}/*.cpp")
-	message(${EXERCISE_SRCS})
+	#message(${EXERCISE_SRCS})
 	add_executable(${EXERCISE_EXE} ${EXERCISE_SRCS})
 	target_link_libraries(${EXERCISE_EXE} OpenGL::GL glfw glad ${ASSIMP_LIBRARIES})
 endforeach()
@@ -51,8 +52,8 @@ endforeach()
 ### set absolute paths for texture and shaders dir ###
 file(RELATIVE_PATH TEXTURES_DIR ${PROJECT_SOURCE_DIR}/bin ${PROJECT_SOURCE_DIR}/data/textures)
 file(RELATIVE_PATH SHADERS_DIR ${PROJECT_SOURCE_DIR}/bin ${PROJECT_SOURCE_DIR}/data/shaders)
-message("Shader relative path from bin: ${SHADERS_DIR}")
-message("Textures relative path from bin: ${TEXTURES_DIR}")
+#message("Shader relative path from bin: ${SHADERS_DIR}")
+#message("Textures relative path from bin: ${TEXTURES_DIR}")
 
 add_compile_definitions(STB_IMAGE_IMPLEMENTATION)
 
