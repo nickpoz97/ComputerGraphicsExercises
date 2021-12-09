@@ -5,12 +5,14 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin )
 
 file(GLOB EXERCISES_SRC_DIRS "${PROJECT_SOURCE_DIR}/src/*")
 
+
 # compile glfw
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
 add_subdirectory(deps/glfw)
+add_subdirectory(deps/assimp)
 
 # find OpenGL
 find_package(OpenGL REQUIRED)
@@ -19,17 +21,22 @@ set(
 	INTERNAL_INCLUDE_DIRS
 	"${PROJECT_SOURCE_DIR}/include/"
 )
+list(APPEND CMAKE_PREFIX_PATH ${PROJECT_BINARY_DIR}/deps/assimp/)
 
 set(
 	EXTERNAL_INCLUDE_DIRS
 	"deps/glad/include"
 	"deps/glfw/include"
-	"deps/glm"	
+	"deps/glm"
+	"deps/assimp-4.1.0/include"
 )
 
 add_library(
 	glad STATIC deps/glad/src/glad.c
 )
+
+find_package(assimp REQUIRED)
+message("Assimp lib path : ${ASSIMP_LIBRARIES})
 
 include_directories(${INTERNAL_INCLUDE_DIRS} ${EXTERNAL_INCLUDE_DIRS})
 
@@ -38,7 +45,7 @@ foreach(DIRPATH IN LISTS EXERCISES_SRC_DIRS)
 	file(GLOB EXERCISE_SRCS "${DIRPATH}/*.cpp")
 	message(${EXERCISE_SRCS})
 	add_executable(${EXERCISE_EXE} ${EXERCISE_SRCS})
-	target_link_libraries(${EXERCISE_EXE} OpenGL::GL glfw glad)	
+	target_link_libraries(${EXERCISE_EXE} OpenGL::GL glfw glad ${ASSIMP_LIBRARIES})
 endforeach()
 
 ### set absolute paths for texture and shaders dir ###
