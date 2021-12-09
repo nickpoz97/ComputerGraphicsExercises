@@ -28,7 +28,7 @@ set(
 	"deps/glad/include"
 	"deps/glfw/include"
 	"deps/glm"
-	"deps/assimp-4.1.0/include"
+	"deps/assimp/include"
 )
 
 add_library(
@@ -38,6 +38,10 @@ add_library(
 find_package(assimp REQUIRED)
 message("Assimp lib path : ${ASSIMP_LIBRARIES}")
 message("Assimp include dirs : ${ASSIMP_INCLUDE_DIRS}")
+file(
+	COPY ${PROJECT_BINARY_DIR}/deps/assimp/include/assimp/config.h
+	DESTINATION ${ASSIMP_INCLUDE_DIRS}/assimp/
+)
 
 include_directories(${INTERNAL_INCLUDE_DIRS} ${EXTERNAL_INCLUDE_DIRS})
 
