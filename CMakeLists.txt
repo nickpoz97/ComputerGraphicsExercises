@@ -4,7 +4,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 
 file(GLOB EXERCISES_SRC_DIRS "${PROJECT_SOURCE_DIR}/src/*")
-
+set(INTERNAL_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/include")
 
 # compile glfw
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
@@ -12,35 +12,26 @@ set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
 add_subdirectory(deps/glfw)
-add_subdirectory(deps/assimp)
 
 # find OpenGL
 find_package(OpenGL REQUIRED)
 
-set(
-	INTERNAL_INCLUDE_DIRS
-	"${PROJECT_SOURCE_DIR}/include/"
-)
-list(APPEND CMAKE_PREFIX_PATH ${PROJECT_BINARY_DIR}/deps/assimp/)
+if(WIN32)
+	add_library(assimp STATIC IMPORTED)
+	set_property(TARGET assimp PROPERTY IMPORTED_LOCATION "${PROJECT_SOURCE_DIR}/libs/win/assimp-vc140-mt.lib")
+	file(COPY "${PROJECT_SOURCE_DIR}/libs/win/assimp-vc140-mt.dll" DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+endif()
 
 set(
 	EXTERNAL_INCLUDE_DIRS
 	"deps/glad/include"
 	"deps/glfw/include"
 	"deps/glm"
-	"deps/assimp/include"
+	"deps/assimp-4.1.0"
 )
 
 add_library(
 	glad STATIC deps/glad/src/glad.c
-)
-
-find_package(assimp REQUIRED)
-message("Assimp lib path : ${ASSIMP_LIBRARIES}")
-message("Assimp include dirs : ${ASSIMP_INCLUDE_DIRS}")
-file(
-	COPY ${PROJECT_BINARY_DIR}/deps/assimp/include/assimp/config.h
-	DESTINATION ${ASSIMP_INCLUDE_DIRS}/assimp/
 )
 
 include_directories(${INTERNAL_INCLUDE_DIRS} ${EXTERNAL_INCLUDE_DIRS})
@@ -48,9 +39,8 @@ include_directories(${INTERNAL_INCLUDE_DIRS} ${EXTERNAL_INCLUDE_DIRS})
 foreach(DIRPATH IN LISTS EXERCISES_SRC_DIRS)
 	get_filename_component(EXERCISE_EXE ${DIRPATH} NAME)
 	file(GLOB EXERCISE_SRCS "${DIRPATH}/*.cpp")
-	#message(${EXERCISE_SRCS})
 	add_executable(${EXERCISE_EXE} ${EXERCISE_SRCS})
-	target_link_libraries(${EXERCISE_EXE} OpenGL::GL glfw glad ${ASSIMP_LIBRARIES})
+	target_link_libraries(${EXERCISE_EXE} OpenGL::GL glfw glad assimp)
 endforeach()
 
 ### set absolute paths for texture and shaders dir ###
