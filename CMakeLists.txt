@@ -20,6 +20,9 @@ if(WIN32)
 	add_library(assimp STATIC IMPORTED)
 	set_property(TARGET assimp PROPERTY IMPORTED_LOCATION "${PROJECT_SOURCE_DIR}/libs/win/assimp-vc140-mt.lib")
 	file(COPY "${PROJECT_SOURCE_DIR}/libs/win/assimp-vc140-mt.dll" DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+else()
+	add_library(assimp SHARED IMPORTED)
+	set_property(TARGET assimp PROPERTY IMPORTED_LOCATION "${PROJECT_SOURCE_DIR}/libs/linux/libassimp.so")
 endif()
 
 set(
